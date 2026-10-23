@@ -1,3 +1,3 @@
-// Temporary HTTPS backend, verified reachable when this frontend was prepared.
-// Cloudflare Quick Tunnel hostnames change when restarted. Never put a secret here.
-window.BLUEWINDECO_API_BASE = 'https://specials-non-hydrocodone-gary.trycloudflare.com';
+// GitHub Pages serves a public derived dataset; calculations run in the browser.
+// No local server, temporary tunnel or secret is required.
+window.BLUEWINDECO_API_BASE = '';

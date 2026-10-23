@@ -76,6 +76,7 @@
     return response.json();
   };
   const apiJson = async (url, options = {}) => {
+    if (window.BWEStatic) return window.BWEStatic.request(url, options);
     return requestJson(backendUrl(url), options);
   };
   const query = (path, params) => path + '?' + new URLSearchParams(params).toString();
@@ -655,12 +656,17 @@
     button.disabled = true;
     button.textContent = t('PREPARING EXCEL…');
     try {
-      const response = await fetch(backendUrl('/api/export'), {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ records: state.records })
-      });
-      if (!response.ok) throw new Error(tf('Export failed (HTTP {status}).', { status: response.status }));
-      const blob = await response.blob();
+      let blob;
+      if (window.BWEStaticExport) {
+        blob = await window.BWEStaticExport(state.records);
+      } else {
+        const response = await fetch(backendUrl('/api/export'), {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ records: state.records })
+        });
+        if (!response.ok) throw new Error(tf('Export failed (HTTP {status}).', { status: response.status }));
+        blob = await response.blob();
+      }
       const href = URL.createObjectURL(blob);
       const anchor = document.createElement('a');
       anchor.href = href;

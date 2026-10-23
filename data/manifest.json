@@ -1,0 +1,562 @@
+{
+  "version": 1,
+  "grid": {
+    "rows": 721,
+    "cols": 1440,
+    "resolution_degrees": 0.25,
+    "north_latitude": 90.0,
+    "west_longitude": -180.0,
+    "position_formula": "row * 1440 + column"
+  },
+  "site_count": 86949,
+  "core_parts": [
+    "core.bin.gz.part1",
+    "core.bin.gz.part2",
+    "core.bin.gz.part3",
+    "core.bin.gz.part4"
+  ],
+  "encoding": "gzip-compressed binary; little-endian numeric fields; first 4 bytes uint32 site_count",
+  "core": {
+    "url": "./data/core.bin.gz",
+    "bytes": 1047361,
+    "sha256": "866adc30d6906d7f986800bb23d406ec5b80a2931f78e3ba7396cc8f68320de4",
+    "uncompressed_bytes": 5303893,
+    "fields": [
+      {
+        "name": "linear_position",
+        "dtype": "<u4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_1",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_2",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_3",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_4",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_5",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "capacity_6",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_1",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_2",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_3",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_4",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_5",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "lcoe_6",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "cf",
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "name": "strategy_0",
+        "dtype": "u1",
+        "count": 86949
+      },
+      {
+        "name": "strategy_1",
+        "dtype": "u1",
+        "count": 86949
+      },
+      {
+        "name": "strategy_2",
+        "dtype": "u1",
+        "count": 86949
+      },
+      {
+        "name": "strategy_3",
+        "dtype": "u1",
+        "count": 86949
+      },
+      {
+        "name": "strategy_4",
+        "dtype": "u1",
+        "count": 86949
+      }
+    ]
+  },
+  "impacts": {
+    "files": [
+      {
+        "component": 1,
+        "url": "./data/impact_1.bin.gz",
+        "bytes": 260334,
+        "sha256": "8fb66e7e979f30d049fdeba500b0195ce4a86c41d851686409d0df0a055f7942",
+        "uncompressed_bytes": 12520660
+      },
+      {
+        "component": 2,
+        "url": "./data/impact_2.bin.gz",
+        "bytes": 247181,
+        "sha256": "ee5b6f7964fc9b893f1751f13565ca66e74549167ccd92359d71c8e71fc795f1",
+        "uncompressed_bytes": 12520660
+      },
+      {
+        "component": 3,
+        "url": "./data/impact_3.bin.gz",
+        "bytes": 121027,
+        "sha256": "75311176ca18c9f7b9add5ac805339b7325db0d1cf03374ceecb24f1a940eeeb",
+        "uncompressed_bytes": 12520660
+      },
+      {
+        "component": 4,
+        "url": "./data/impact_4.bin.gz",
+        "bytes": 41261,
+        "sha256": "872a9830e8f89e43feef168e839ef0e93c8a1a552619de1e092783b5f5f17b55",
+        "uncompressed_bytes": 12520660
+      },
+      {
+        "component": 5,
+        "url": "./data/impact_5.bin.gz",
+        "bytes": 82107,
+        "sha256": "57be75167cb5a2978c67fdb61bbf3c9a3caf0f91f83f3a799a726e2b437a29e0",
+        "uncompressed_bytes": 12520660
+      }
+    ],
+    "fields_per_file": [
+      {
+        "axis": "taxon",
+        "group": 1,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 1,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 1,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 1,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 2,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 2,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 2,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 2,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 3,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 3,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 3,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 3,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 4,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 4,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 4,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 4,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 5,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 5,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 5,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "taxon",
+        "group": 5,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 1,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 1,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 1,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 1,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 2,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 2,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 2,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 2,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 3,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 3,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 3,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 3,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 4,
+        "impact": 1,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 4,
+        "impact": 2,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 4,
+        "impact": 3,
+        "dtype": "<f4",
+        "count": 86949
+      },
+      {
+        "axis": "threat",
+        "group": 4,
+        "impact": 4,
+        "dtype": "<f4",
+        "count": 86949
+      }
+    ],
+    "components": {
+      "1": "Monopile foundation",
+      "2": "Jacket foundation",
+      "3": "Floating foundation",
+      "4": "DC transmission",
+      "5": "AC transmission"
+    },
+    "aggregation": "sum of positive finite source FIG values for each component, axis, group and impact"
+  },
+  "labels": {
+    "technologies": [
+      {
+        "id": 1,
+        "label": "Monopile + DC"
+      },
+      {
+        "id": 2,
+        "label": "Monopile + AC"
+      },
+      {
+        "id": 3,
+        "label": "Jacket + DC"
+      },
+      {
+        "id": 4,
+        "label": "Jacket + AC"
+      },
+      {
+        "id": 5,
+        "label": "Floating + DC"
+      },
+      {
+        "id": 6,
+        "label": "Floating + AC"
+      }
+    ],
+    "strategies": [
+      {
+        "id": 0,
+        "label": "Minimum cost"
+      },
+      {
+        "id": 1,
+        "label": "Tier 1 · Negative-only sites"
+      },
+      {
+        "id": 2,
+        "label": "Tier 2 · Minimize negative impacts"
+      },
+      {
+        "id": 3,
+        "label": "Tier 3 · Minimize negative, then maximize positive"
+      },
+      {
+        "id": 4,
+        "label": "Tier 4 · Maximize positive impacts"
+      }
+    ],
+    "taxa": [
+      {
+        "id": 1,
+        "label": "Birds and bats"
+      },
+      {
+        "id": 2,
+        "label": "Fish"
+      },
+      {
+        "id": 3,
+        "label": "Marine mammals"
+      },
+      {
+        "id": 4,
+        "label": "Benthic invertebrates and habitats"
+      },
+      {
+        "id": 5,
+        "label": "Plankton"
+      }
+    ],
+    "threats": [
+      {
+        "id": 1,
+        "label": "Critically endangered (CR)"
+      },
+      {
+        "id": 2,
+        "label": "Endangered (EN)"
+      },
+      {
+        "id": 3,
+        "label": "Vulnerable (VU)"
+      },
+      {
+        "id": 4,
+        "label": "NT / LC / NE"
+      }
+    ],
+    "impacts": [
+      {
+        "id": 1,
+        "label": "Positive"
+      },
+      {
+        "id": 2,
+        "label": "Negative · trait"
+      },
+      {
+        "id": 3,
+        "label": "Negative · behaviour"
+      },
+      {
+        "id": 4,
+        "label": "Negative · general"
+      }
+    ],
+    "metrics": [
+      {
+        "id": "technology",
+        "label": "Technology combination"
+      },
+      {
+        "id": "annual_cost",
+        "label": "Annualized generation cost"
+      },
+      {
+        "id": "lcoe",
+        "label": "Levelized cost of electricity"
+      },
+      {
+        "id": "capacity",
+        "label": "Potential installed capacity"
+      },
+      {
+        "id": "generation",
+        "label": "Modelled gross annual generation"
+      },
+      {
+        "id": "cf",
+        "label": "Capacity factor"
+      },
+      {
+        "id": "impact",
+        "label": "Cumulative affected species richness"
+      }
+    ]
+  },
+  "source_note": "Public derived numeric data; no encryption or anti-scraping guarantee"
+}
