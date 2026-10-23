@@ -1,21 +1,9 @@
-# BlueWindEco
+BlueWindEco (Website: <https://xieeco.github.io/bluewindeco/>) is an online spatial decision-support platform for policymakers, researchers and offshore-wind developers to evaluate technologies and planning strategies for marine species conservation on a 0.25° global marine grid.
 
-Website: <https://xieeco.github.io/bluewindeco/>.
+Copyright © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology.  
 
-This GitHub Pages application runs entirely in the visitor's browser. The map,
-cell query, rectangle summaries, scenario comparisons and Excel export do not
-depend on a local computer, Python server or temporary tunnel.
+Results from this platform are for reference only and can not be used for commercial purposes.
 
-`data/manifest.json`, the `core.bin.gz.part*` files and the five `impact_*.bin.gz`
-files are public derived research data. Anyone can download or reconstruct
-their numeric contents. The original MATLAB file, NetCDF file, strategy
-workbook, encryption key and Python backend are not required for website use
-and are not included in this public repository.
+If you have any questions, please contact us at: xiehyeco@163.com  
 
-To regenerate the data after changing the research inputs, run
-`bluewindeco/tools/build_static_pack.py` from the private source project,
-verify its parity checks and publish the resulting `data/` files together.
-
-The site uses only relative URLs, so it also works at a GitHub Pages project
-path (`/<repository>/`). GitHub Pages availability remains subject to GitHub's
-service availability and published usage limits.
+If you use BlueWindEco platform, please use this citation: BlueWindEco. (2026). BlueWindEco: Online spatial decision-support platform for marine species conservation and offshore-wind planning [Computer software]. GitHub. https://github.com/XieEco/bluewindeco (platform: https://xieeco.github.io/bluewindeco/).
