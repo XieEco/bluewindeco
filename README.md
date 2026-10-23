@@ -1,5 +1,7 @@
 # BlueWindEco public frontend
 
+Website: <https://xieeco.github.io/bluewindeco/>.
+
 This directory contains only static files for GitHub Pages. Research rasters,
 strategy workbooks, decryption keys, and the Python backend are not included.
 
