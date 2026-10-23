@@ -1,0 +1,10 @@
+*.mat
+*.nc
+*.xlsx
+*.xls
+*.csv
+*.enc
+*.key
+private/
+.venv/
+.DS_Store
