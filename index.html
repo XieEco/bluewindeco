@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="BlueWindEco is a spatial decision platform for offshore wind power, cost and marine biodiversity impacts.">
+  <title>BlueWindEco — Offshore Wind &amp; Marine Biodiversity</title>
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./vendor/leaflet.css">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#top" aria-label="BlueWindEco home">
+      <img src="./logo.svg" alt="" width="45" height="45">
+      <span class="brand-lockup"><strong>BLUEWIND<span>ECO</span></strong><small>MARINE SITING INTELLIGENCE</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Main navigation">
+      <a href="#technology" data-nav-target="technology" data-mode-link="combo">TECHNOLOGY</a>
+      <a href="#technology" data-nav-target="technology" data-mode-link="strategy">STRATEGIES</a>
+      <a href="#layers" data-nav-target="layers">MAP LAYERS</a>
+      <a href="#area" data-nav-target="area">AREA</a>
+      <a href="#results" data-nav-target="results">RESULTS</a>
+      <a href="#compare" data-nav-target="compare">COMPARE</a>
+    </nav>
+    <div class="header-status"><span class="status-dot" aria-hidden="true"></span><span>RESEARCH PREVIEW</span></div>
+    <div class="language-switcher" id="language-switcher">
+      <button class="language-toggle" id="language-toggle" type="button" aria-label="Select language" aria-haspopup="menu" aria-expanded="false" aria-controls="language-menu">
+        <svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><circle cx="10" cy="10" r="7.5"/><path d="M2.7 10h14.6M10 2.5c2 2 3 4.5 3 7.5s-1 5.5-3 7.5c-2-2-3-4.5-3-7.5s1-5.5 3-7.5Z"/></svg>
+        <span id="language-current">EN</span><span class="language-chevron" aria-hidden="true">⌄</span>
+      </button>
+      <div class="language-menu is-hidden" id="language-menu" role="menu" aria-label="Language">
+        <button type="button" role="menuitemradio" aria-checked="true" data-lang="en">English</button>
+        <button type="button" role="menuitemradio" aria-checked="false" data-lang="zh-CN">简体中文</button>
+        <button type="button" role="menuitemradio" aria-checked="false" data-lang="fr">Français</button>
+        <button type="button" role="menuitemradio" aria-checked="false" data-lang="es">Español</button>
+        <button type="button" role="menuitemradio" aria-checked="false" data-lang="pt">Português</button>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow"><span class="eyebrow-line"></span> GLOBAL OFFSHORE WIND / BIODIVERSITY</p>
+        <h1 id="page-title">Explore the energy–ecology frontier.</h1>
+        <p class="intro-copy">Map offshore wind power, costs and biodiversity impacts.</p>
+      </div>
+      <div class="intro-mark" aria-hidden="true"><span>0.25°</span><small>GLOBAL GRID</small></div>
+    </section>
+
+    <section class="workspace" aria-label="Interactive map workspace">
+      <div class="left-rail">
+      <aside class="panel controls-panel" id="technology">
+        <div class="panel-heading"><span class="section-number">01</span><div><span class="overline">EXPLORE</span><h2>Scenario controls</h2></div></div>
+
+        <div class="control-group">
+          <label class="control-label">MODE</label>
+          <div class="mode-switch" role="radiogroup" aria-label="Choose a scenario mode">
+            <button id="mode-combo" class="mode-option is-active" type="button" role="radio" aria-checked="true" data-mode="combo">Technology</button>
+            <button id="mode-strategy" class="mode-option" type="button" role="radio" aria-checked="false" data-mode="strategy">Strategy</button>
+          </div>
+        </div>
+
+        <section class="control-group mode-content" id="combo-panel" aria-labelledby="combo-heading">
+          <div class="group-title"><h3 id="combo-heading">Technology combination</h3><span>01 / 06</span></div>
+          <div id="combo-options" class="choice-grid" role="radiogroup" aria-label="Technology combinations"></div>
+        </section>
+
+        <section class="control-group mode-content is-hidden" id="strategy-panel" aria-labelledby="strategy-heading">
+          <div class="group-title"><h3 id="strategy-heading">Planning strategy</h3><span>05 OPTIONS</span></div>
+          <div id="strategy-options" class="strategy-list" role="radiogroup" aria-label="Planning strategies"></div>
+          <p class="hint">Each grid cell adopts the technology chosen by the selected planning strategy.</p>
+        </section>
+
+      </aside>
+
+      <section class="panel layers-panel" id="layers" aria-labelledby="metric-heading">
+        <div class="panel-heading"><span class="section-number">02</span><div><span class="overline">DISPLAY</span><h2 id="metric-heading">Map layers</h2></div></div>
+        <section class="control-group" aria-label="Map metric">
+          <div class="group-title"><h3>Map layer</h3><span>SELECT A METRIC</span></div>
+          <div id="metric-options" class="metric-list" role="radiogroup" aria-label="Map metric"></div>
+        </section>
+
+        <section class="control-group impact-lens" id="impact-lens" aria-labelledby="impact-heading">
+          <div class="group-title"><h3 id="impact-heading">Impact lens</h3><span>MAP + AREA CHART</span></div>
+          <div class="inline-segment" role="radiogroup" aria-label="Impact grouping">
+            <button id="axis-taxon" type="button" class="is-active" data-axis="taxon" role="radio" aria-checked="true">By taxon</button>
+            <button id="axis-threat" type="button" data-axis="threat" role="radio" aria-checked="false">By threat</button>
+          </div>
+          <label class="field-label" for="impact-group">Group</label>
+          <select id="impact-group" class="select-control"></select>
+          <label class="field-label" for="impact-type">Impact type</label>
+          <select id="impact-type" class="select-control"></select>
+        </section>
+
+      </section>
+      </div>
+
+      <section class="panel map-panel" aria-labelledby="map-heading">
+        <div class="map-toolbar">
+          <div><span class="overline">SPATIAL EXPLORER</span><h2 id="map-heading">Global marine atlas</h2></div>
+          <div class="map-toolbar-actions"><span class="live-pill"><span></span> LIVE GRID</span><button class="icon-button" id="fit-world" type="button" title="Fit global view" aria-label="Fit global view">◎</button></div>
+        </div>
+        <div class="map-stage">
+          <div id="map" aria-label="Interactive global offshore wind map"></div>
+          <div class="map-crosshair" aria-hidden="true"></div>
+          <div id="map-loading" class="map-loading" role="status" aria-live="polite"><span class="loading-ring"></span> Preparing map layer…</div>
+          <div class="map-topline"><span id="map-scenario-name">MONOPILE + DC</span><span id="map-metric-name">ANNUAL COST</span></div>
+          <div class="map-legend" id="map-legend"><span class="legend-title" id="legend-title">ANNUALIZED COST</span><div id="legend-continuous"><div class="legend-ramp"></div><div class="legend-values"><span id="legend-min">0</span><span id="legend-max">—</span></div><small id="legend-unit">USD yr⁻¹</small></div><div id="legend-categories" class="legend-categories is-hidden" aria-label="Technology combination colors"></div></div>
+          <div class="map-coordinates" id="map-coordinates">LON — &nbsp; LAT —</div>
+        </div>
+        <div class="map-footnote"><span><i class="footnote-swatch"></i> LIGHT GREY / LAND</span><span>CLICK A CELL TO INSPECT · ZOOM TO EXPLORE</span><span id="valid-cells">— AVAILABLE CELLS</span></div>
+      </section>
+
+      <div class="right-rail">
+      <section class="panel analysis-panel" id="area" aria-labelledby="area-heading">
+        <div class="panel-heading"><span class="section-number">03</span><div><span class="overline">ANALYZE</span><h2 id="area-heading">Area selection</h2></div></div>
+        <div class="analysis-body">
+        <div class="selection-methods" role="tablist" aria-label="Area selection method">
+          <button id="method-draw" class="selection-method is-active" type="button" role="tab" aria-selected="true" aria-controls="selection-draw" data-area-method="draw">Draw area</button>
+          <button id="method-cell" class="selection-method" type="button" role="tab" aria-selected="false" aria-controls="selection-cell" data-area-method="cell">Select point</button>
+          <button id="method-coordinates" class="selection-method" type="button" role="tab" aria-selected="false" aria-controls="selection-coordinates" data-area-method="coordinates">Coordinates</button>
+        </div>
+        <section id="selection-draw" class="selection-method-panel" role="tabpanel" aria-labelledby="method-draw">
+          <p class="panel-copy">Drag across the map to draw a rectangular area.</p>
+          <button id="draw-area" class="button button-secondary selection-action" type="button">▱ DRAW ON MAP</button>
+        </section>
+        <section id="selection-cell" class="selection-method-panel is-hidden" role="tabpanel" aria-labelledby="method-cell">
+          <div class="group-title"><h3 id="single-cell-heading">Single grid cell</h3><span>0.25° GRID</span></div>
+          <button id="pick-cell" class="button button-secondary selection-action" type="button">◎ CLICK A POINT ON MAP</button>
+          <p class="hint">Or enter a point to find its nearest grid cell.</p>
+          <div class="coordinate-grid cell-coordinate-grid">
+            <label for="cell-lon">LONGITUDE <input id="cell-lon" type="number" min="-180" max="180" step="any" placeholder="−180 to 180"></label>
+            <label for="cell-lat">LATITUDE <input id="cell-lat" type="number" min="-90" max="90" step="any" placeholder="−90 to 90"></label>
+          </div>
+          <button id="select-cell" class="button button-outline selection-action" type="button">SELECT GRID CELL</button>
+          <p id="cell-selection-note" class="cell-selection-note" aria-live="polite"></p>
+        </section>
+        <section id="selection-coordinates" class="selection-method-panel is-hidden" role="tabpanel" aria-labelledby="method-coordinates">
+          <p class="panel-copy">Enter the west, east, south and north bounds.</p>
+          <div class="coordinate-grid">
+            <label>WEST <input id="west" type="number" min="-180" max="180" step="0.25" placeholder="−180"></label>
+            <label>EAST <input id="east" type="number" min="-180" max="180" step="0.25" placeholder="180"></label>
+            <label>SOUTH <input id="south" type="number" min="-90" max="90" step="0.25" placeholder="−90"></label>
+            <label>NORTH <input id="north" type="number" min="-90" max="90" step="0.25" placeholder="90"></label>
+          </div>
+          <button id="apply-area" class="button button-secondary selection-action" type="button">APPLY COORDINATES</button>
+        </section>
+        <p id="area-message" class="feedback" role="status">No area selected yet.</p>
+        </div>
+      </section>
+
+      <section class="panel results-panel" id="results" aria-labelledby="results-heading">
+        <button id="results-expand" class="compare-toggle results-toggle" type="button" aria-pressed="false" aria-label="Expand area results" title="Expand area results"><svg class="maximize-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg><span class="close-icon is-hidden" aria-hidden="true">×</span></button>
+        <div class="panel-heading"><span class="section-number">04</span><div><span class="overline">VISUALIZE</span><h2 id="results-heading">Area results</h2></div></div>
+        <div class="results-body">
+        <div class="group-title chart-title"><h3>Selected area</h3><span id="area-cell-count">— CELLS</span></div>
+        <div class="kpi-grid"><div><small>ANNUALIZED COST</small><strong id="kpi-cost">—</strong></div><div><small>INSTALLABLE CAPACITY</small><strong id="kpi-capacity">—</strong></div><div><small>ANNUAL GENERATION</small><strong id="kpi-generation">—</strong></div></div>
+        <section class="mini-chart cost-chart-panel" aria-labelledby="cost-chart-heading"><div class="chart-heading"><h4 id="cost-chart-heading">Total annual cost</h4><span>USD yr⁻¹</span></div><div id="cost-chart" class="chart-rows"><p class="chart-empty">Select an area to view results.</p></div></section>
+        <section class="mini-chart impact-chart-panel" aria-labelledby="impact-chart-heading"><div class="chart-heading"><h4 id="impact-chart-heading">Cumulative affected species richness</h4><span id="impact-chart-group">BIRDS &amp; BATS</span></div><div id="impact-chart" class="chart-rows"><p class="chart-empty">Four impact types will appear here.</p></div></section>
+        </div>
+        <div class="analysis-action"><button id="record-button" class="button button-primary" type="button" disabled><span class="button-plus">＋</span> RECORD THIS SELECTION</button></div>
+      </section>
+
+      <section class="compare-section panel" id="compare" aria-labelledby="compare-heading">
+        <button id="compare-expand" class="compare-toggle" type="button" aria-pressed="false" aria-label="Expand comparison workspace" title="Expand comparison workspace"><svg class="maximize-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg><span class="close-icon is-hidden" aria-hidden="true">×</span></button>
+        <div class="compare-head"><div class="panel-heading"><span class="section-number">05</span><div><span class="overline">DECIDE</span><h2 id="compare-heading">Comparison workspace</h2></div></div><div class="compare-head-actions"><span id="record-count" class="record-count">0 RECORDED SELECTIONS</span><button id="export-button" class="button button-secondary" type="button" disabled>↧ EXPORT EXCEL</button><button id="clear-records" class="button button-outline clear-records" type="button" aria-label="Delete all comparison records" disabled>× CLEAR ALL</button></div></div>
+        <p class="compare-intro">Record scenarios for the same or different extents, remove entries, and export every measured outcome.</p>
+        <div class="table-scroll"><table id="comparison-table"><thead id="comparison-head"></thead><tbody id="comparison-body"><tr><td class="empty-table">No selections recorded. Set an area, then choose “Record this selection”.</td></tr></tbody></table></div>
+      </section>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="clear-confirmation" class="confirm-dialog" aria-labelledby="clear-confirm-title" aria-describedby="clear-confirm-copy">
+    <span class="overline">COMPARISON WORKSPACE</span>
+    <h2 id="clear-confirm-title">Delete all records?</h2>
+    <p id="clear-confirm-copy">This will permanently remove <span id="clear-confirm-count">all recorded selections</span> from this browser. This cannot be undone.</p>
+    <div class="confirm-actions"><button id="cancel-clear-records" class="button button-secondary" type="button">CANCEL</button><button id="confirm-clear-records" class="button button-danger" type="button">DELETE ALL</button></div>
+  </dialog>
+
+  <footer id="about" class="site-footer"><div><img src="./logo.svg" alt="" width="30" height="30"><span>BLUEWINDECO</span></div><p>Copyright © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology</p><p class="footer-contact">Contact email: <a href="mailto:xiehyeco@163.com">xiehyeco@163.com</a></p></footer>
+
+  <script src="./vendor/leaflet.js"></script>
+  <script src="./i18n.js"></script>
+  <script src="./config.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>
