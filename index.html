@@ -8,7 +8,7 @@
   <title>BlueWindEco — Offshore Wind &amp; Marine Biodiversity</title>
   <link rel="icon" href="./logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./vendor/leaflet.css">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=20261027-results-v2">
 </head>
 <body>
   <header class="site-header">
@@ -156,10 +156,18 @@
         <button id="results-expand" class="compare-toggle results-toggle" type="button" aria-pressed="false" aria-label="Expand area results" title="Expand area results"><svg class="maximize-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 4H4v5M15 4h5v5M4 15v5h5M20 15v5h-5"/></svg><span class="close-icon is-hidden" aria-hidden="true">×</span></button>
         <div class="panel-heading"><span class="section-number">04</span><div><span class="overline">VISUALIZE</span><h2 id="results-heading">Area results</h2></div></div>
         <div class="results-body">
+        <div class="results-view-tabs" role="tablist" aria-label="Area result view">
+          <button id="results-overview-tab" type="button" role="tab" aria-selected="true" aria-controls="results-overview" data-results-view="overview" class="is-active">Overview</button>
+          <button id="results-breakdown-tab" type="button" role="tab" aria-selected="false" aria-controls="results-breakdown" data-results-view="breakdown">Breakdown</button>
+        </div>
+        <div id="results-overview" class="results-overview" role="tabpanel" aria-labelledby="results-overview-tab">
         <div class="group-title chart-title"><h3>Selected area</h3><span id="area-cell-count">— CELLS</span></div>
         <div class="kpi-grid"><div><small>ANNUALIZED COST</small><strong id="kpi-cost">—</strong></div><div><small>INSTALLABLE CAPACITY</small><strong id="kpi-capacity">—</strong></div><div><small>ANNUAL GENERATION</small><strong id="kpi-generation">—</strong></div></div>
         <section class="mini-chart cost-chart-panel" aria-labelledby="cost-chart-heading"><div class="chart-heading"><h4 id="cost-chart-heading">Total annual cost</h4><span>USD yr⁻¹</span></div><div id="cost-chart" class="chart-rows"><p class="chart-empty">Select an area to view results.</p></div></section>
         <section class="mini-chart impact-chart-panel" aria-labelledby="impact-chart-heading"><div class="chart-heading"><h4 id="impact-chart-heading">Cumulative affected species richness</h4><span id="impact-chart-group">BIRDS &amp; BATS</span></div><div id="impact-chart" class="chart-rows"><p class="chart-empty">Four impact types will appear here.</p></div></section>
+        </div>
+        <div id="results-breakdown" class="results-breakdown is-hidden" role="tabpanel" aria-labelledby="results-breakdown-tab"><p class="chart-empty">Select an area to view results.</p></div>
+        <div id="results-dashboard" class="results-dashboard" aria-label="Expanded area analysis"></div>
         </div>
         <div class="analysis-action"><button id="record-button" class="button button-primary" type="button" disabled><span class="button-plus">＋</span> RECORD THIS SELECTION</button></div>
       </section>
@@ -184,10 +192,10 @@
   <footer id="about" class="site-footer"><div><img src="./logo.svg" alt="" width="30" height="30"><span>BLUEWINDECO</span></div><p>Copyright © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology</p><p class="footer-contact">Contact email: <a href="mailto:xiehyeco@163.com">xiehyeco@163.com</a></p></footer>
 
   <script src="./vendor/leaflet.js"></script>
-  <script src="./i18n.js"></script>
+  <script src="./i18n.js?v=20261027-results-v2"></script>
   <script src="./config.js"></script>
   <script src="./static_api.js"></script>
   <script src="./static_export.js"></script>
-  <script src="./app.js"></script>
+  <script src="./app.js?v=20261027-results-v2"></script>
 </body>
 </html>

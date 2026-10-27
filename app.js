@@ -43,7 +43,7 @@
     land: null, coast: null, rectangle: null, drawing: false,
     areaMethod: 'draw', selectingPoint: false,
     drawStart: null, drawTemporary: null, layerRequest: 0,
-    summaryRequest: 0, ignoreClickUntil: 0, layerInfo: null
+    summaryRequest: 0, ignoreClickUntil: 0, layerInfo: null, resultsView: 'overview'
   };
 
   const $ = id => document.getElementById(id);
@@ -58,6 +58,8 @@
   const money = value => 'US$ ' + compact(value);
   const capacityLabel = value => value >= 1e6 ? precise(value / 1e6) + ' TW' : value >= 1e3 ? precise(value / 1e3) + ' GW' : precise(value) + ' MW';
   const generationLabel = value => value >= 1e6 ? precise(value / 1e6) + ' TWh' : value >= 1e3 ? precise(value / 1e3) + ' GWh' : precise(value) + ' MWh';
+  const technologyColors = ['#F4C288', '#8B511F', '#68BFE8', '#214EA7', '#DCA0DD', '#7552A7'];
+  const impactColors = ['#55deed', '#f0bd69', '#f28c9f', '#b89aff'];
   const currentId = () => state.mode === 'combo' ? state.comboId : state.strategyId;
   const selectedScenario = () => (state.mode === 'combo' ? state.config.technologies : state.config.strategies).find(x => Number(x.id) === currentId());
   const selectedGroup = () => (state.axis === 'taxon' ? state.config.taxa : state.config.threats).find(x => Number(x.id) === state.group);
@@ -396,6 +398,9 @@
   async function refreshSummary() {
     state.summary = null;
     $('record-button').disabled = true;
+    for (const id of ['kpi-cost', 'kpi-capacity', 'kpi-generation']) $(id).textContent = '—';
+    $('area-cell-count').textContent = t('— CELLS');
+    renderCharts();
     if (!state.bounds) return;
     const version = ++state.summaryRequest;
     setFeedback(t('Calculating exact grid-cell totals…'));
@@ -445,6 +450,7 @@
   }
 
   function renderCharts() {
+    renderAreaAnalysis();
     if (!state.summary) {
       $('cost-chart').innerHTML = `<p class="chart-empty">${escapeHTML(t('Select an area to view results.'))}</p>`;
       $('impact-chart').innerHTML = `<p class="chart-empty">${escapeHTML(t('Four impact types will appear here.'))}</p>`;
@@ -458,6 +464,122 @@
     const maxImpact = Math.max(1, ...values);
     $('impact-chart').innerHTML = state.config.impacts.map((impact, index) => barRow(displayLabel(impact), values[index] || 0, maxImpact, Number(impact.id) === state.impact)).join('');
     $('impact-chart-group').textContent = displayLabel(selectedGroup()).toUpperCase() || t('SELECTED GROUP');
+  }
+
+  function setResultsView(view) {
+    state.resultsView = view === 'breakdown' ? 'breakdown' : 'overview';
+    for (const button of document.querySelectorAll('[data-results-view]')) {
+      const active = button.dataset.resultsView === state.resultsView;
+      button.classList.toggle('is-active', active);
+      button.setAttribute('aria-selected', String(active));
+    }
+    $('results-overview').classList.toggle('is-hidden', state.resultsView !== 'overview');
+    $('results-breakdown').classList.toggle('is-hidden', state.resultsView !== 'breakdown');
+  }
+
+  // Additive outcomes are summed. LCOE and CF use the corresponding energy weights.
+  function resultMetric() {
+    const metric = state.metric === 'technology' ? 'capacity' : state.metric === 'impact' ? 'annual_cost' : state.metric;
+    const units = { annual_cost: 'USD yr⁻¹', capacity: 'MW', generation: 'MWh yr⁻¹', lcoe: 'USD MWh⁻¹', cf: '%' };
+    return { id: metric, label: shortMetric(metric), unit: units[metric],
+      aggregation: metric === 'lcoe' ? t('Generation-weighted mean') : metric === 'cf' ? t('Capacity-weighted mean') : t('Area total') };
+  }
+
+  function resultMetricValue(totals, metric) {
+    if (metric === 'capacity') return Number(totals.capacity_mw || 0);
+    if (metric === 'generation') return Number(totals.generation_mwh || 0);
+    if (metric === 'lcoe') return totals.generation_mwh > 0 ? totals.annual_cost_usd / totals.generation_mwh : 0;
+    if (metric === 'cf') return totals.capacity_mw > 0 ? totals.generation_mwh / (totals.capacity_mw * 8760) * 100 : 0;
+    return Number(totals.annual_cost_usd || 0);
+  }
+
+  function formatResultValue(value, metric) {
+    if (metric === 'annual_cost') return money(value);
+    if (metric === 'capacity') return capacityLabel(value);
+    if (metric === 'generation') return generationLabel(value);
+    if (metric === 'cf') return `${precise(value, 2)}%`;
+    return precise(value, 2);
+  }
+
+  function analysisBars(entries, metric, impact = false) {
+    const maximum = Math.max(1, ...entries.map(entry => entry.value));
+    return entries.map(entry => {
+      const width = entry.value > 0 ? Math.max(0.8, entry.value / maximum * 100) : 0;
+      const value = impact ? precise(entry.value, 0) : formatResultValue(entry.value, metric.id);
+      const exact = `${entry.label}: ${precise(entry.value, impact ? 0 : 4)}${impact ? '' : ` ${metric.unit}`}`;
+      return `<div class="analysis-bar${entry.active ? ' is-active' : ''}" style="--bar-color:${entry.color}" title="${escapeHTML(exact)}"><div class="analysis-bar-top"><span>${entry.code ? `<i>${escapeHTML(entry.code)}</i>` : ''}${escapeHTML(entry.label)}</span><strong>${escapeHTML(value)}</strong></div><div class="analysis-bar-track"><span style="width:${width}%"></span></div></div>`;
+    }).join('');
+  }
+
+  function technologyRing(entries) {
+    const total = entries.reduce((sum, entry) => sum + Number(entry.capacity_mw || 0), 0);
+    let offset = 0;
+    const segments = entries.map(entry => {
+      const share = total > 0 ? entry.capacity_mw / total * 100 : 0;
+      const segment = `<circle cx="64" cy="64" r="51" pathLength="100" fill="none" stroke="${technologyColors[entry.technology_code - 1]}" stroke-width="13" stroke-dasharray="${share} ${100 - share}" stroke-dashoffset="${-offset}" transform="rotate(-90 64 64)"><title>${escapeHTML(labelFor(state.config.technologies, entry.technology_code))}: ${precise(share, 2)}%</title></circle>`;
+      offset += share;
+      return segment;
+    }).join('');
+    return `<div class="technology-orbit"><svg viewBox="0 0 128 128" role="img" aria-label="${escapeHTML(t('Capacity share by technology'))}"><circle class="orbit-guide" cx="64" cy="64" r="61" fill="none"/><circle cx="64" cy="64" r="51" fill="none" stroke="#183549" stroke-width="13"/>${segments}</svg><div class="orbit-center"><strong>${entries.length}</strong><span>${escapeHTML(t('Technologies'))}</span></div><small>${escapeHTML(t('Capacity share'))}</small></div>`;
+  }
+
+  function renderAreaAnalysis() {
+    const compactPanel = $('results-breakdown');
+    const dashboard = $('results-dashboard');
+    if (!state.summary) {
+      const message = t(state.bounds ? 'Calculating exact grid-cell totals…' : 'Select an area to view results.');
+      compactPanel.innerHTML = `<p class="chart-empty">${escapeHTML(message)}</p>`;
+      dashboard.innerHTML = `<div class="analysis-empty"><span class="analysis-empty-orbit" aria-hidden="true"></span><h3>${escapeHTML(t('Area results'))}</h3><p>${escapeHTML(message)}</p></div>`;
+      return;
+    }
+    const summary = state.summary;
+    const metric = resultMetric();
+    const technologies = (summary.technology_totals || []).filter(entry => entry.capacity_mw > 0);
+    const techEntries = technologies.map(entry => ({
+      label: labelFor(state.config.technologies, entry.technology_code), code: `0${entry.technology_code}`,
+      value: resultMetricValue(entry, metric.id), color: technologyColors[entry.technology_code - 1]
+    }));
+    const groups = state.axis === 'taxon' ? state.config.taxa : state.config.threats;
+    const matrix = state.axis === 'taxon' ? summary.impacts_by_taxon : summary.impacts_by_threat;
+    const effectIndex = state.impact - 1;
+    const groupEntries = groups.map((group, index) => ({
+      label: displayLabel(group), value: Number(matrix?.[index]?.[effectIndex] || 0),
+      active: Number(group.id) === state.group, color: impactColors[effectIndex]
+    }));
+    const groupTitle = t(state.axis === 'taxon' ? 'By taxon' : 'By threat');
+    const effectLabel = displayLabel(selectedImpact());
+    const techBars = analysisBars(techEntries, metric);
+    const groupBars = analysisBars(groupEntries, metric, true);
+    compactPanel.innerHTML = `<section class="mini-chart"><div class="chart-heading"><h4>${escapeHTML(t('By technology'))}</h4><span>${escapeHTML(metric.label)}</span></div>${techBars || `<p class="chart-empty">${escapeHTML(t('No feasible grid cells in this area.'))}</p>`}</section><section class="mini-chart"><div class="chart-heading"><h4>${escapeHTML(groupTitle)}</h4><span>${escapeHTML(effectLabel)}</span></div>${groupBars}</section>`;
+
+    const allImpacts = [0, 1, 2, 3].map(effect => (summary.impacts_by_taxon || []).reduce((sum, row) => sum + Number(row[effect] || 0), 0));
+    const selectedTotal = resultMetricValue(summary, metric.id);
+    const bounds = state.bounds;
+    const extent = `${t('LON')} ${precise(bounds.west)}° → ${precise(bounds.east)}° · ${t('LAT')} ${precise(bounds.south)}° → ${precise(bounds.north)}°`;
+    const layerLabel = state.metric === 'impact' ? `${displayLabel(selectedGroup())} · ${effectLabel}` : shortMetric(state.metric);
+    const kpis = [
+      { label: t('Total annual cost'), value: money(summary.annual_cost_usd), unit: 'USD yr⁻¹', key: 'annual_cost', icon: '01' },
+      { label: t('Potential installed capacity'), value: capacityLabel(summary.capacity_mw), unit: 'MW / GW / TW', key: 'capacity', icon: '02' },
+      { label: t('Annual generation'), value: generationLabel(summary.generation_mwh), unit: 'MWh / GWh / TWh yr⁻¹', key: 'generation', icon: '03' }
+    ].map(kpi => `<div class="analysis-kpi${metric.id === kpi.key ? ' is-active' : ''}"><div><span>${escapeHTML(kpi.label)}</span><i>${kpi.icon}</i></div><strong>${escapeHTML(kpi.value)}</strong><small>${escapeHTML(kpi.unit)}</small><span class="kpi-spark" aria-hidden="true"></span></div>`).join('');
+    const impactCards = state.config.impacts.map((effect, index) => `<div class="impact-total${Number(effect.id) === state.impact ? ' is-active' : ''}" style="--effect-color:${impactColors[index]}"><span>${escapeHTML(displayLabel(effect))}</span><strong>${precise(allImpacts[index], 0)}</strong><small>${escapeHTML(t('All taxa'))}</small></div>`).join('');
+    const technologyTable = technologies.map(entry => `<tr><th scope="row"><span class="technology-label"><i style="background:${technologyColors[entry.technology_code - 1]}"></i>${escapeHTML(labelFor(state.config.technologies, entry.technology_code))}</span></th><td title="${precise(entry.annual_cost_usd, 4)} USD yr⁻¹">${compact(entry.annual_cost_usd)}</td><td title="${precise(entry.capacity_mw, 4)} MW">${compact(entry.capacity_mw)}</td><td title="${precise(entry.generation_mwh, 4)} MWh yr⁻¹">${compact(entry.generation_mwh)}</td><td>${precise(resultMetricValue(entry, 'lcoe'), 2)}</td><td>${precise(resultMetricValue(entry, 'cf'), 2)}%</td></tr>`).join('');
+    const maxByEffect = [0, 1, 2, 3].map(effect => Math.max(1, ...groups.map((_, index) => Number(matrix?.[index]?.[effect] || 0))));
+    const impactTable = groups.map((group, groupIndex) => `<tr${Number(group.id) === state.group ? ' class="is-selected-group"' : ''}><th scope="row">${escapeHTML(displayLabel(group))}</th>${state.config.impacts.map((effect, index) => {
+      const value = Number(matrix?.[groupIndex]?.[index] || 0);
+      return `<td${Number(effect.id) === state.impact ? ' class="is-selected-effect"' : ''} style="--cell-level:${value / maxByEffect[index]};--effect-color:${impactColors[index]}"><span>${precise(value, 0)}</span></td>`;
+    }).join('')}</tr>`).join('');
+    const matrixTotals = [0, 1, 2, 3].map(effect => groups.reduce((sum, _, index) => sum + Number(matrix?.[index]?.[effect] || 0), 0));
+    dashboard.innerHTML = `
+      <div class="analysis-context"><div><span class="analysis-eyebrow">${escapeHTML(t('Selected scenario'))}</span><h3>${escapeHTML(displayLabel(selectedScenario()))}</h3><div class="analysis-context-tags"><span>${escapeHTML(layerLabel)}</span><span>${escapeHTML(extent)}</span></div></div><div class="analysis-cell-counter"><strong>${precise(summary.cell_count, 0)}</strong><span>${escapeHTML(t('Feasible grid cells'))}</span></div></div>
+      <div class="analysis-kpis">${kpis}</div>
+      <section class="analysis-impact-summary" aria-label="${escapeHTML(t('Impact totals'))}"><div class="analysis-section-label"><span>${escapeHTML(t('Cumulative affected species richness'))}</span><small>${escapeHTML(t('Impact totals'))}</small></div><div class="impact-totals">${impactCards}</div></section>
+      <div class="analysis-main-grid">
+        <section class="analysis-card technology-analysis"><div class="analysis-card-heading"><div><span class="analysis-eyebrow">${escapeHTML(t('By technology'))}</span><h4>${escapeHTML(metric.label)}</h4></div><div class="analysis-card-total"><strong>${escapeHTML(formatResultValue(selectedTotal, metric.id))}</strong><small>${escapeHTML(metric.aggregation)} · ${escapeHTML(metric.unit)}</small></div></div><div class="technology-distribution">${technologyRing(technologies)}<div class="analysis-ranks">${techBars || `<p class="chart-empty">${escapeHTML(t('No feasible grid cells in this area.'))}</p>`}</div></div></section>
+        <section class="analysis-card impact-analysis"><div class="analysis-card-heading"><div><span class="analysis-eyebrow">${escapeHTML(groupTitle)}</span><h4>${escapeHTML(effectLabel)}</h4></div><span class="analysis-filter-chip">${escapeHTML(displayLabel(selectedGroup()))}</span></div><div class="analysis-ranks">${groupBars}</div></section>
+        <section class="analysis-card technology-detail"><div class="analysis-card-heading"><div><span class="analysis-eyebrow">${escapeHTML(t('Energy breakdown'))}</span><h4>${escapeHTML(t('Technology combinations'))}</h4></div></div><div class="analysis-table-scroll"><table class="analysis-table"><thead><tr><th>${escapeHTML(t('Technology'))}</th><th>${escapeHTML(t('Annual cost'))}<small>USD yr⁻¹</small></th><th>${escapeHTML(t('Capacity'))}<small>MW</small></th><th>${escapeHTML(t('Generation'))}<small>MWh yr⁻¹</small></th><th>LCOE<small>USD MWh⁻¹</small></th><th>CF<small>%</small></th></tr></thead><tbody>${technologyTable || `<tr><td colspan="6">${escapeHTML(t('No feasible grid cells in this area.'))}</td></tr>`}</tbody><tfoot><tr><th>${escapeHTML(t('Area summary'))}</th><td>${compact(summary.annual_cost_usd)}</td><td>${compact(summary.capacity_mw)}</td><td>${compact(summary.generation_mwh)}</td><td>${precise(resultMetricValue(summary, 'lcoe'), 2)}</td><td>${precise(resultMetricValue(summary, 'cf'), 2)}%</td></tr></tfoot></table></div><p class="analysis-table-note">${escapeHTML(t('LCOE is weighted by generation; CF is weighted by capacity.'))}</p></section>
+        <section class="analysis-card impact-detail"><div class="analysis-card-heading"><div><span class="analysis-eyebrow">${escapeHTML(t('Impact breakdown'))}</span><h4>${escapeHTML(groupTitle)}</h4></div></div><div class="analysis-table-scroll"><table class="analysis-table impact-matrix"><thead><tr><th>${escapeHTML(t('Group'))}</th>${state.config.impacts.map((effect, index) => `<th title="${escapeHTML(displayLabel(effect))}"${Number(effect.id) === state.impact ? ' class="is-selected-effect"' : ''}>${escapeHTML(t(['Positive', 'Trait', 'Behaviour', 'General adverse'][index]))}</th>`).join('')}</tr></thead><tbody>${impactTable}</tbody><tfoot><tr><th>${escapeHTML(t('Area total'))}</th>${matrixTotals.map(value => `<td>${precise(value, 0)}</td>`).join('')}</tr></tfoot></table></div></section>
+      </div>`;
   }
 
   const impactColumnKey = (axis, groupId, impactId) => `${axis}_${groupId}_impact_${impactId}`;
@@ -622,6 +744,7 @@
     button.title = t(expanded ? 'Close expanded area results' : 'Expand area results');
     button.querySelector('.maximize-icon').classList.toggle('is-hidden', expanded);
     button.querySelector('.close-icon').classList.toggle('is-hidden', !expanded);
+    $('results').querySelector('.results-body').scrollTop = 0;
   }
 
   function markActiveNav(activeLink) {
@@ -705,6 +828,7 @@
       state.metric = button.dataset.metric;
       renderMetrics();
       loadLayer();
+      renderCharts();
     });
     document.querySelectorAll('[data-axis]').forEach(button => button.addEventListener('click', () => setAxis(button.dataset.axis)));
     $('impact-group').addEventListener('change', event => {
@@ -748,6 +872,7 @@
     $('confirm-clear-records').addEventListener('click', clearAllRecords);
     $('compare-expand').addEventListener('click', () => setComparisonExpanded(!$('compare').classList.contains('is-expanded')));
     $('results-expand').addEventListener('click', () => setResultsExpanded(!$('results').classList.contains('is-expanded')));
+    document.querySelectorAll('[data-results-view]').forEach(button => button.addEventListener('click', () => setResultsView(button.dataset.resultsView)));
     document.addEventListener('keydown', event => {
       if (event.key === 'Escape') {
         if ($('compare').classList.contains('is-expanded')) {
@@ -816,6 +941,7 @@
     renderChoices(); renderMetrics(); fillGroups();
     renderImpactTypes();
     loadRecords(); renderRecords();
+    renderCharts();
     window.addEventListener('bluewindeco:languagechange', refreshLanguage);
     wireControls();
     try { initMap(); loadLayer(); }
