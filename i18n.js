@@ -16,6 +16,10 @@
     ['AREA', '区域', 'ZONE', 'ÁREA', 'ÁREA'],
     ['RESULTS', '结果', 'RÉSULTATS', 'RESULTADOS', 'RESULTADOS'],
     ['COMPARE', '比选', 'COMPARER', 'COMPARAR', 'COMPARAR'],
+    ['Developers', '开发者', 'Développeurs', 'Desarrolladores', 'Desenvolvedores'],
+    ['Nanyang Technological University · Dr Hongyi Xie', '南洋理工大学 · 谢泓毅博士', 'Université technologique de Nanyang · Dr Hongyi Xie', 'Universidad Tecnológica de Nanyang · Dr. Hongyi Xie', 'Universidade Tecnológica de Nanyang · Dr. Hongyi Xie'],
+    ['Guangdong University of Technology · Professor Sai Liang', '广东工业大学 · 梁赛教授', 'Université de technologie du Guangdong · Pr Sai Liang', 'Universidad Tecnológica de Guangdong · Profesor Sai Liang', 'Universidade de Tecnologia de Guangdong · Professor Sai Liang'],
+    ['Guangdong University of Technology · Dr Yumeng Li', '广东工业大学 · 李雨萌博士', 'Université de technologie du Guangdong · Dr Yumeng Li', 'Universidad Tecnológica de Guangdong · Dr. Yumeng Li', 'Universidade de Tecnologia de Guangdong · Dr. Yumeng Li'],
     ['RESEARCH PREVIEW', '研究预览版', 'VERSION DE RECHERCHE', 'VERSIÓN DE INVESTIGACIÓN', 'VERSÃO DE PESQUISA'],
     ['Select language', '选择语言', 'Choisir la langue', 'Seleccionar idioma', 'Selecionar idioma'],
     ['Language', '语言', 'Langue', 'Idioma', 'Idioma'],
@@ -134,7 +138,7 @@
     ['from this browser. This cannot be undone.', '从此浏览器中删除。此操作无法撤销。', 'de ce navigateur. Cette action est irréversible.', 'de este navegador. Esta acción no se puede deshacer.', 'deste navegador. Esta ação não pode ser desfeita.'],
     ['CANCEL', '取消', 'ANNULER', 'CANCELAR', 'CANCELAR'],
     ['DELETE ALL', '全部删除', 'TOUT SUPPRIMER', 'ELIMINAR TODO', 'EXCLUIR TUDO'],
-    ['Copyright © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology', '版权所有 © 2026 广东工业大学 · 南洋理工大学 · 华中科技大学', 'Copyright © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology', 'Derechos de autor © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology', 'Direitos autorais © 2026 Guangdong University of Technology · Nanyang Technological University · Huazhong University of Science and Technology'],
+    ['Copyright © 2026 Nanyang Technological University · Guangdong University of Technology', '版权所有 © 2026 南洋理工大学 · 广东工业大学', 'Copyright © 2026 Université technologique de Nanyang · Université de technologie du Guangdong', 'Derechos de autor © 2026 Universidad Tecnológica de Nanyang · Universidad Tecnológica de Guangdong', 'Direitos autorais © 2026 Universidade Tecnológica de Nanyang · Universidade de Tecnologia de Guangdong'],
     ['Contact email:', '联系邮箱：', 'Courriel :', 'Correo electrónico:', 'E-mail de contato:'],
 
     // Config and layer labels supplied by the Flask API.

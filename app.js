@@ -807,6 +807,24 @@
   }
 
   function wireControls() {
+    const closeDevelopers = (restoreFocus = false) => {
+      $('developers-menu').classList.add('is-hidden');
+      $('developers-toggle').setAttribute('aria-expanded', 'false');
+      if (restoreFocus) $('developers-toggle').focus();
+    };
+    $('developers-toggle').addEventListener('click', () => {
+      const open = $('developers-menu').classList.contains('is-hidden');
+      $('developers-menu').classList.toggle('is-hidden', !open);
+      $('developers-toggle').setAttribute('aria-expanded', String(open));
+    });
+    document.addEventListener('pointerdown', event => {
+      if (!$('developers-dropdown').contains(event.target)) closeDevelopers();
+    });
+    $('developers-dropdown').addEventListener('keydown', event => {
+      if (event.key === 'Escape' && !$('developers-menu').classList.contains('is-hidden')) {
+        event.preventDefault(); event.stopPropagation(); closeDevelopers(true);
+      }
+    });
     document.querySelectorAll('[data-mode]').forEach(button => button.addEventListener('click', () => setMode(button.dataset.mode)));
     $('combo-options').addEventListener('click', event => {
       const button = event.target.closest('[data-combo]');
